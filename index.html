@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>UNO Zero Scoreboard</title>
+<meta name="theme-color" content="#101114">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="UNO Zero">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{background:#101114}body{margin:0;background:#101114;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-top:max(env(safe-area-inset-top),24px);padding-bottom:env(safe-area-inset-bottom,0px)}button,input{font:inherit}.app{max-width:760px;margin:auto;padding:18px 12px 40px}h1{text-align:center;margin:0;font-size:30px;line-height:1.1}.sub{text-align:center;color:#aaa;margin:6px 0 14px;font-size:14px}.controls{display:flex;gap:8px;margin:10px 0}.controls button{flex:1;border:0;border-radius:12px;padding:12px;font-weight:900}.add{background:#ffd400;color:#111}.new{background:#a82036;color:#fff}.status{text-align:center;font-size:17px;font-weight:900;min-height:25px;margin:12px 0}.selectedDisplay{text-align:center;font-weight:900;color:#ffd400;margin:5px 0 10px;min-height:20px}.players{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.player{position:relative;background:#fff;color:#111;border-radius:17px;padding:10px;box-shadow:0 5px 18px #0007}.player.current{outline:4px solid #ffd400}.player input{width:100%;border:0;border-bottom:2px solid #ddd;text-align:center;font-size:17px;font-weight:800;padding:4px;outline:0}.score{text-align:center;font-size:38px;font-weight:900;margin:4px;cursor:pointer}.roundPlus{font-size:17px;color:#777}.select{width:100%;border:0;border-radius:10px;padding:9px;background:#111;color:#fff;font-weight:900}.select:disabled{opacity:.55}.remove{position:absolute;right:8px;top:8px;border:0;border-radius:50%;width:24px;height:24px;font-weight:900}.panel{background:#1d1f24;border-radius:18px;padding:14px;margin-top:12px}h2{font-size:18px;margin:0 0 10px}.note{font-size:12px;color:#999;line-height:1.35;margin-top:9px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.card{border:0;background:#27292f;border-radius:14px;padding:6px;box-shadow:0 5px 14px #0007;cursor:pointer;color:#fff}.card:active{transform:scale(.96)}.card img{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:8px}.card .name{font-size:11px;font-weight:900;margin-top:5px;text-align:center;line-height:1.1}.card .pts{font-size:15px;font-weight:1000;color:#ffd400;text-align:center;margin-top:2px}.nums{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.nums button,.roundBtns button{border:0;border-radius:10px;padding:11px;font-weight:900;font-size:17px}.round{text-align:center;font-size:24px;font-weight:900}.roundBtns{display:flex;gap:8px;margin-top:10px}.roundBtns button{flex:1}.finish{width:100%;margin-top:10px;border:0;border-radius:12px;padding:13px;background:#ffd400;color:#111;font-weight:1000}.historyBtn{width:100%;border:0;border-radius:12px;padding:13px;background:#eee;color:#111;font-weight:1000;margin-top:12px}.roundHistory{font-size:13px}.rhRow{display:grid;grid-template-columns:40px 1fr;padding:7px 0;border-bottom:1px solid #333}.rhRow:last-child{border-bottom:0}.modal{position:fixed;inset:0;background:#000b;display:none;z-index:20;padding:calc(env(safe-area-inset-top) + 20px) 12px calc(env(safe-area-inset-bottom) + 20px);overflow:auto}.modal.open{display:block}.modalBox{max-width:760px;margin:auto;background:#1d1f24;border-radius:18px;padding:16px}.modalHead{display:flex;justify-content:space-between;align-items:center}.close{border:0;border-radius:10px;padding:8px 12px;font-weight:900}.game{background:#101114;border-radius:14px;padding:12px;margin-top:10px}.gameTitle{font-weight:1000;font-size:17px}.gameDate{color:#aaa;font-size:12px;margin:3px 0 8px}.gamePlayers{font-size:13px;line-height:1.5}.empty{text-align:center;color:#999;padding:30px 10px}.danger{background:#a82036;color:#fff}.historyActions{display:flex;gap:8px;margin-top:12px}.historyActions button{flex:1;border:0;border-radius:10px;padding:10px;font-weight:900}
+@media(max-width:430px){.app{padding-left:10px;padding-right:10px}.cards{gap:5px}.card{padding:4px}.card .name{font-size:9px}.card .pts{font-size:13px}.players{gap:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>🃏 UNO ZERO</h1>
+<div class="sub">Lowest total wins • 9 rounds • 2–8 players</div>
+<div class="controls"><button class="add" id="addPlayerBtn">＋ Add player</button><button class="new" id="newGameBtn">New game</button></div>
+<div class="status" id="status">Score Round 1</div>
+<div class="selectedDisplay" id="selectedPlayerDisplay">Select a player to score</div>
+<div class="players" id="players"></div>
+
+<div class="panel"><h2>Action cards</h2><div class="cards" id="cards"></div><div class="note">UNO Zero action-card values: Reverse 10, Skip 11, Draw Two 12, Double Draw Two 22.</div></div>
+<div class="panel"><h2>Number cards</h2><div class="nums" id="nums"></div></div>
+<div class="panel"><div class="round">Player hand: <span id="round">0</span></div><div id="lastCard" style="text-align:center;color:#aaa;font-size:14px;font-weight:800;margin-top:4px;min-height:20px">Last added: —</div><div class="roundBtns"><button id="undoBtn">↩ Undo</button><button id="clearBtn">Clear</button></div><button class="finish" id="finishHandBtn">✓ SAVE PLAYER SCORE</button></div>
+<div class="panel"><h2>Round history</h2><div class="roundHistory" id="roundHistory">No completed rounds yet.</div></div>
+<button class="historyBtn" id="gameHistoryBtn">📚 GAME HISTORY</button>
+</div>
+
+<div class="modal" id="historyModal"><div class="modalBox"><div class="modalHead"><h2 style="margin:0">Previous games</h2><button class="close" id="closeHistoryBtn">Close</button></div><div id="gamesList"></div><div class="historyActions"><button class="danger" id="clearHistoryBtn">Clear game history</button></div></div></div>
+
+<script>
+const CARD_DEFS=[
+ {slug:'uno-zero-reverse',name:'Reverse',points:10},
+ {slug:'uno-zero-skip',name:'Skip',points:11},
+ {slug:'uno-zero-draw-two',name:'Draw Two',points:12},
+ {slug:'uno-zero-double-draw-2',name:'Double Draw 2',points:22}
+];
+const KEY='unoZeroGame_v1', HISTORY_KEY='unoZeroHistory_v1';
+let players=[...Array(2)].map((_,i)=>({name:'P'+(i+1),score:0}));
+let currentPlayer=0, round=1, handScore=0, stack=[], lastCard='—', roundScores={}, rounds=[], gameStartedAt=new Date().toISOString();
+
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({players,currentPlayer,round,handScore,stack,lastCard,roundScores,rounds,gameStartedAt}))}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(!s)return;if(Array.isArray(s.players)&&s.players.length>=2&&s.players.length<=8)players=s.players;currentPlayer=Number.isInteger(s.currentPlayer)?s.currentPlayer:0;round=Math.min(9,Math.max(1,Number(s.round)||1));handScore=Number(s.handScore)||0;stack=Array.isArray(s.stack)?s.stack:[];lastCard=s.lastCard||'—';roundScores=s.roundScores&&typeof s.roundScores==='object'?s.roundScores:{};rounds=Array.isArray(s.rounds)?s.rounds:[];gameStartedAt=s.gameStartedAt||new Date().toISOString()}catch(e){localStorage.removeItem(KEY)}}
+function getHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch(e){return[]}}
+function saveHistory(h){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(h))}catch(e){}}
+function fmtDate(iso){return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
+function fmtRange(a,b){const da=new Date(a),db=new Date(b);return da.toDateString()===db.toDateString()?fmtDate(a):fmtDate(a)+' – '+fmtDate(b)}
+function renderPlayers(){
+ const el=document.getElementById('players');
+ el.innerHTML=players.map((p,i)=>{const cur=i===currentPlayer;const rs=roundScores[i];return `<div class="player ${cur?'current':''}"><button class="remove remove-btn" data-i="${i}" ${players.length<=2?'disabled':''}>×</button><input value="${esc(p.name)}" data-name="${i}"><div class="score">${p.score}${cur&&handScore?` <span class="roundPlus">(+${handScore})</span>`:''}</div><button class="select select-player-btn" data-i="${i}" ${rs!==undefined?'disabled':''}>${rs!==undefined?'ROUND SCORE: '+rs:'SCORE THIS PLAYER'}</button></div>`}).join('');
+ el.querySelectorAll('.remove-btn').forEach(b=>b.addEventListener('click',()=>removePlayer(+b.dataset.i)));
+ el.querySelectorAll('.select-player-btn').forEach(b=>b.addEventListener('click',()=>selectPlayer(+b.dataset.i)));
+ el.querySelectorAll('input[data-name]').forEach(x=>{x.addEventListener('change',()=>{const i=+x.dataset.name;players[i].name=x.value.trim()||'P'+(i+1);renderAll()});x.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const i=+x.dataset.name;players[i].name=x.value.trim()||'P'+(i+1);if(i<players.length-1){renderPlayers();const n=document.querySelector(`input[data-name="${i+1}"]`);if(n){n.focus();n.select()}}else{x.blur();renderAll()}}})});
+}
+function renderCards(){const el=document.getElementById('cards');el.innerHTML='';CARD_DEFS.forEach(c=>{const b=document.createElement('button');b.className='card';b.type='button';b.innerHTML=`<img src="${c.slug}.png" alt="${c.name} card"><div class="name">${c.name}</div><div class="pts">+${c.points}</div>`;b.addEventListener('click',()=>add(c.points,c.name));el.appendChild(b)})}
+function renderNums(){const el=document.getElementById('nums');el.innerHTML='';for(let n=0;n<=6;n++){const b=document.createElement('button');b.type='button';b.textContent=n;b.addEventListener('click',()=>add(n,'Number '+n));el.appendChild(b)}}
+function setStatus(t){document.getElementById('status').textContent=t}
+function selectPlayer(i){if(roundScores[i]!==undefined)return;if(stack.length||handScore){alert('Finish or clear the current player score before switching players.');return}currentPlayer=i;setStatus('Score Round '+round+': '+players[i].name);renderAll()}
+function add(v,label){handScore+=v;stack.push({v,label:label+' (+'+v+')'});lastCard=label+' (+'+v+')';renderAll()}
+function undo(){if(!stack.length)return;stack.pop();handScore=stack.reduce((a,x)=>a+x.v,0);lastCard=stack.length?stack[stack.length-1].label:'—';renderAll()}
+function clearHand(){handScore=0;stack=[];lastCard='—';renderAll()}
+function savePlayerScore(){if(roundScores[currentPlayer]!==undefined){return}roundScores[currentPlayer]=handScore;players[currentPlayer].score+=handScore;const next=players.findIndex((p,i)=>roundScores[i]===undefined);if(next>=0){currentPlayer=next;handScore=0;stack=[];lastCard='—';setStatus('Score Round '+round+': '+players[next].name)}else{finishRound()}renderAll()}
+function finishRound(){const snap=players.map((p,i)=>({name:p.name,score:p.score,round:Number(roundScores[i]||0)}));rounds.push({round, scores:snap});if(round>=9){const end=new Date().toISOString();const finalPlayers=players.map(p=>({name:p.name,score:p.score}));const hist=getHistory();hist.unshift({id:Date.now(),startedAt:gameStartedAt,endedAt:end,players:finalPlayers,rounds:JSON.parse(JSON.stringify(rounds))});saveHistory(hist);const low=Math.min(...finalPlayers.map(p=>p.score));setStatus('🏁 Game complete • Lowest score: '+low);alert('UNO Zero game complete! The lowest total score wins.');players=finalPlayers.map(p=>({name:p.name,score:0}));currentPlayer=0;round=1;handScore=0;roundScores={};stack=[];lastCard='—';rounds=[];gameStartedAt=new Date().toISOString();setStatus('Score Round 1');return}round++;roundScores={};handScore=0;stack=[];lastCard='—';currentPlayer=0;setStatus('Score Round '+round);}
+function renderRoundHistory(){const el=document.getElementById('roundHistory');if(!rounds.length){el.textContent='No completed rounds yet.';return}el.innerHTML=rounds.map(r=>`<div class="rhRow"><b>R${r.round}</b><span>${r.scores.map(x=>esc(x.name)+' '+x.round+' pts').join(' • ')}</span></div>`).join('')}
+function renderGames(){const el=document.getElementById('gamesList'),h=getHistory();if(!h.length){el.innerHTML='<div class="empty">No previous games yet.</div>';return}el.innerHTML=h.map((g,idx)=>{const low=Math.min(...g.players.map(p=>p.score));return `<div class="game"><div class="gameTitle">Game ${h.length-idx}</div><div class="gameDate">${fmtRange(g.startedAt,g.endedAt)} • 9 rounds</div><div class="gamePlayers">${g.players.map(p=>esc(p.name)+': <b>'+p.score+'</b>'+ (p.score===low?' 🏆':'' )).join('<br>')}</div></div>`}).join('')}
+function openHistory(){renderGames();document.getElementById('historyModal').classList.add('open')}
+function closeHistory(){document.getElementById('historyModal').classList.remove('open')}
+function clearHistory(){if(confirm('Delete all previous game history?')){saveHistory([]);renderGames()}}
+function addPlayer(){if(players.length>=8){alert('UNO Zero supports up to 8 players.');return}if(roundScoresCount()||stack.length||handScore){alert('Finish the current round before adding a player.');return}players.push({name:'P'+(players.length+1),score:0});renderAll()}
+function removePlayer(i){if(players.length<=2)return;if(roundScoresCount()||stack.length||handScore){alert('Finish the current round before removing a player.');return}if(confirm('Remove '+players[i].name+'?')){players.splice(i,1);if(currentPlayer>=players.length)currentPlayer=0;renderAll()}}
+function roundScoresCount(){return Object.keys(roundScores).length}
+function newGame(){if(confirm('Start a new game? The current unfinished game will not be added to history.')){players=players.map((p,i)=>({name:p.name||'P'+(i+1),score:0}));currentPlayer=0;round=1;handScore=0;stack=[];lastCard='—';roundScores={};rounds=[];gameStartedAt=new Date().toISOString();setStatus('Score Round 1');renderAll()}}
+function renderAll(){renderPlayers();renderCards();renderNums();renderRoundHistory();document.getElementById('round').textContent=handScore;document.getElementById('lastCard').textContent='Last added: '+lastCard;document.getElementById('selectedPlayerDisplay').textContent='Scoring: '+players[currentPlayer].name;save()}
+
+document.getElementById('addPlayerBtn').addEventListener('click',addPlayer);document.getElementById('newGameBtn').addEventListener('click',newGame);document.getElementById('undoBtn').addEventListener('click',undo);document.getElementById('clearBtn').addEventListener('click',clearHand);document.getElementById('finishHandBtn').addEventListener('click',savePlayerScore);document.getElementById('gameHistoryBtn').addEventListener('click',openHistory);document.getElementById('closeHistoryBtn').addEventListener('click',closeHistory);document.getElementById('clearHistoryBtn').addEventListener('click',clearHistory);document.getElementById('historyModal').addEventListener('click',e=>{if(e.target.id==='historyModal')closeHistory()});
+load();renderAll();if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
